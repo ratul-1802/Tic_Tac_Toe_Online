@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Front page -->
+    <div class="starting-page ">
+        <h1>select character</h1>
+        <div class="profile">
+            <div class="img">
+                <img src="/assets/m1.png" class="pic" data-id="b1" alt="">
+                <img src="/assets/f1.png" class="pic" alt="" data-id="g1">
+            </div>
+            <div class="img">
+                <img src="/assets/f2.png" class="pic" alt="" data-id="g2">
+                <img src="/assets/m2.png" class="pic" alt="" data-id="b2">
+            </div>
+        </div>
+        <button id="start-btn">start game</button>
+    </div>
+
+    <!-- Game page -->
+    <div class="container">
+        <div class="board">
+            <div class="block" data-cell></div>
+            <div class="block" data-cell></div>
+            <div class="block" data-cell></div>
+            <div class="block" data-cell></div>
+            <div class="block" data-cell></div>
+            <div class="block" data-cell></div>
+            <div class="block" data-cell></div>
+            <div class="block" data-cell></div>
+            <div class="block" data-cell></div>
+        </div>
+    </div>
+    <!-- Draw page -->
+    <div class="draw-msg hide">
+        <div class="draw">
+            <h1 style="text-align: center; color: chartreuse;">Draw</h1>
+        </div>
+        <button id="drawBtn" class="primary-btn">Play Again</button>
+    </div>
+    <!-- winner page -->
+    <div class="winner-msg hide">
+        <h1 style="text-align: center; color: chartreuse;">Winner</h1>
+        <div class="winner"></div>
+        <button id="restartBtn" class="primary-btn">Restart</button>
+    </div>
+
+    <script type="module" src="index.js"></script>
+
+</body>
+</html>

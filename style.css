@@ -1,0 +1,125 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+}
+
+body{
+    background-color: rgba(49, 49, 49, 0.938);
+}
+
+.starting-page,.container{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#start-btn,button{
+    border: none;
+    background-color: rgb(71, 131, 241);
+    padding: 10px 20px;
+    border-radius: 10px;
+    color:aliceblue;
+    margin-top: 2em;
+    font-size: 1.4em;
+    cursor: pointer;
+}
+
+.img > img:not(.selected):hover{
+    background-color: yellow;
+}
+.img > img{
+    cursor: pointer;
+}
+
+/* game-page */
+.board{
+    display: grid;
+    grid-template-columns: repeat(3,auto);
+    row-gap: 2px;
+    column-gap: 2px;
+    background-color: aliceblue;
+}
+.block{
+    height: 100px;
+    width: 100px;
+    background-color: rgba(49, 49, 49, 0.938);
+    cursor: pointer;
+}
+.block.b1,.block.g1,.block.b2,.block.g2{
+    cursor: not-allowed;
+}
+.board.b1 .block:not(.b1):not(.g1):not(.g2):hover{
+    background: url(/assets/m1.png) rgb(27, 170, 189);
+    opacity: 0.5;
+}
+.board.b2 .block:not(.b1):not(.g1):not(.g2):hover{
+    background: url(/assets/m2.png) rgb(27, 170, 189);
+    opacity: 0.5;
+}
+.board.g1 .block:not(.b1):not(.g1):not(.b2):hover{
+    background: url(/assets/f1.png) yellowgreen;
+    opacity: 0.5;
+}
+.board.g2 .block:not(.b1):not(.b2):not(.g2):hover{
+    background: url(/assets/f2.png) yellowgreen;
+    opacity: 0.5;
+}
+
+.block.b1{
+    background: url(/assets/m1.png) rgb(27, 170, 189);
+    background-size: cover;
+}
+.block.b2{
+    background: url(/assets/m2.png) rgb(27, 170, 189);
+    background-size: cover;
+}
+.block.g1{
+    background: url(/assets/f1.png) yellowgreen;
+    background-size: cover;
+}
+.block.g2{
+    background: url(/assets/f2.png) yellowgreen;
+    background-size: cover;
+}
+/* draw and winner page */
+.draw-msg, .winner-msg{
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(49, 49, 49, 0.938);
+}
+
+.hide{
+    display: none;
+}
+.show{
+    display: flex;
+}
+.img .selected{
+    background-color: yellowgreen;
+    border-radius: 15px;
+}
+
+.win{
+    background-color: yellowgreen !important;
+}
+
+button:hover{
+    background-color: yellowgreen;
+    color: black;
+}
+#start-btn:hover{
+    background-color: yellowgreen;
+    color: black;
+}
