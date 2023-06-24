@@ -4,6 +4,7 @@ export let GAME = {
     X_CLASS : 'b1', // value for male 
     Y_CLASS : 'g1', //value for female
     turn : undefined,
+    indicator:0,
     selectedAvatar:document.querySelectorAll('.pic'),
     blockElements: document.querySelectorAll('[data-cell]'),
     boardElement:document.querySelector('.board'),

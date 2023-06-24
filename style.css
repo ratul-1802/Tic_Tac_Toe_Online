@@ -29,11 +29,21 @@ body{
     cursor: pointer;
 }
 
-.img > img:not(.selected):hover{
+.img > img:not(.selected_1,.selected_2):hover{
     background-color: yellow;
 }
 .img > img{
     cursor: pointer;
+}
+.img .selected_1{
+    background-color: yellowgreen;
+    border-radius: 15px;
+    cursor: not-allowed;
+}
+.img .selected_2{
+    background-color: rgb(27, 170, 189);
+    border-radius: 15px;
+    cursor: not-allowed;
 }
 
 /* game-page */
@@ -53,39 +63,55 @@ body{
 .block.b1,.block.g1,.block.b2,.block.g2{
     cursor: not-allowed;
 }
-.board.b1 .block:not(.b1):not(.g1):not(.g2):hover{
-    background: url(/assets/m1.png) rgb(27, 170, 189);
+
+/* hovering effect for different character */
+.board.b1 .block:not(.b1):not(.b2):not(.g1):not(.g2):hover{
+    background: url(/assets/m1.png) ;
     opacity: 0.5;
 }
-.board.b2 .block:not(.b1):not(.g1):not(.g2):hover{
-    background: url(/assets/m2.png) rgb(27, 170, 189);
+.board.b2 .block:not(.b1):not(.b2):not(.g1):not(.g2):hover{
+    background: url(/assets/m2.png) ;
     opacity: 0.5;
 }
-.board.g1 .block:not(.b1):not(.g1):not(.b2):hover{
-    background: url(/assets/f1.png) yellowgreen;
+.board.g1 .block:not(.b1):not(.b2):not(.g1):not(.g2):hover{
+    background: url(/assets/f1.png) ;
     opacity: 0.5;
 }
-.board.g2 .block:not(.b1):not(.b2):not(.g2):hover{
-    background: url(/assets/f2.png) yellowgreen;
+.board.g2 .block:not(.b1):not(.b2):not(.g1):not(.g2):hover{
+    background: url(/assets/f2.png) ;
     opacity: 0.5;
+}
+.board.green .block:not(.b1):not(.b2):not(.g1):not(.g2):hover{
+    background-color: yellowgreen;
+}
+.board.blue .block:not(.b1):not(.b2):not(.g1):not(.g2):hover{
+    background-color: rgb(27, 170, 189);
 }
 
+/* assigning character & background based on user */
 .block.b1{
-    background: url(/assets/m1.png) rgb(27, 170, 189);
+    background: url(/assets/m1.png);
     background-size: cover;
 }
 .block.b2{
-    background: url(/assets/m2.png) rgb(27, 170, 189);
+    background: url(/assets/m2.png);
     background-size: cover;
 }
 .block.g1{
-    background: url(/assets/f1.png) yellowgreen;
+    background: url(/assets/f1.png);
     background-size: cover;
 }
 .block.g2{
-    background: url(/assets/f2.png) yellowgreen;
+    background: url(/assets/f2.png);
     background-size: cover;
 }
+.board .block.blue{
+    background-color: rgb(27, 170, 189);
+}
+.board .block.green{
+    background-color: yellowgreen;
+}
+
 /* draw and winner page */
 .draw-msg, .winner-msg{
     position: fixed;
@@ -106,15 +132,14 @@ body{
 .show{
     display: flex;
 }
-.img .selected{
-    background-color: yellowgreen;
-    border-radius: 15px;
-}
 
 .win{
     background-color: yellowgreen !important;
 }
 
+.win.blue{
+    background-color:rgb(27, 170, 189) !important;
+}
 button:hover{
     background-color: yellowgreen;
     color: black;

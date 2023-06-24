@@ -19,6 +19,8 @@ function startGame(){
         //deleting previous records before restarting the game
         cell.classList.remove(GAME.X_CLASS);
         cell.classList.remove(GAME.Y_CLASS);
+        cell.classList.remove("green");
+        cell.classList.remove("blue");
         cell.classList.remove("win");
 
         cell.addEventListener('click',clickHandler,{once:true})
@@ -34,10 +36,16 @@ function startGame(){
 function clickHandler(e){
     //console.log('working');
     const cell = e.target;
-    const currentClass = GAME.turn ? GAME.Y_CLASS : GAME.X_CLASS;
+    let currentClass=GAME.X_CLASS;
+    let backgrnd_color='green';
+    if(GAME.turn){
+        currentClass=GAME.Y_CLASS;
+        backgrnd_color='blue';
+    }
+    //const currentClass = GAME.turn ? GAME.Y_CLASS : GAME.X_CLASS;
     // console.log(cell);
     // console.log(currentClass);
-    markCell(cell, currentClass);
+    markCell(cell, currentClass,backgrnd_color);
     //check winner
     let flag = checkWin( GAME.blockElements,currentClass).filter((win, index) => {
         if (win){
