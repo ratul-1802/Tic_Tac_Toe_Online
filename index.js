@@ -49,7 +49,7 @@ function clickHandler(e){
     //check winner
     let flag = checkWin( GAME.blockElements,currentClass).filter((win, index) => {
         if (win){
-         
+         console.log(win);
          // add green background to the winner 
          WINNING_COMBINATIONS[index].map(i => {
              GAME.blockElements[i].classList.add('win');
