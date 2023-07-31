@@ -14,11 +14,11 @@ export const WINNING_COMBINATIONS = [
 export function checkWin(blockElements,currentClass){
     let winMatch=[];
     WINNING_COMBINATIONS.some((combination)=>{
-        console.log(combination);
+        //console.log(combination);
         winMatch.push(combination.every((index)=>{
             return blockElements[index].classList.contains(currentClass);
         }))
     })
-    console.log(winMatch);
+    //console.log(winMatch);
     return winMatch || null;
 }

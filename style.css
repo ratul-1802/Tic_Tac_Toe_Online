@@ -133,6 +133,14 @@ body{
     display: flex;
 }
 
+.disable-cursor{
+    pointer-events: none;
+}
+
+.cursor-not-allowed{
+    cursor: not-allowed;
+}
+
 .win{
     background-color: yellowgreen !important;
 }
@@ -147,4 +155,17 @@ button:hover{
 #start-btn:hover{
     background-color: yellowgreen;
     color: black;
+}
+
+.message{
+    display: flex;
+    width: 200px;
+    height: 80px;
+    background: rgb(95, 94, 94);
+    color: yellowgreen;
+    font-size: larger;
+    margin: 25px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 60%;
 }
