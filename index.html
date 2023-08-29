@@ -8,11 +8,24 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- room details -->
+    <div class="room-container">
+        <section class="joining-details ">
+            <div>
+                <input type="text" id="user-name" placeholder="Enter Username">
+            </div>
+            <div>
+                <input type="text" id="room-id" placeholder="Enter Room No">
+            </div>
+            <button type="submit" id="room-join">Join Room</button>
+        </section>
+    </div>
+
     <!-- Front page -->
-    <div class="starting-page ">
+    <div class="starting-page hide ">
         <h1>select character</h1>
         <div class="profile">
-            <div class="img" >
+            <div class="img " >
                 <img src="/assets/m1.png" class="pic" data-id="b1" alt="" >
                 <img src="/assets/f1.png" class="pic" alt="" data-id="g1">
             </div>
@@ -25,7 +38,7 @@
     </div>
 
     <!-- Game page -->
-    <div class="container">
+    <div class="container ">
         <div class="board">
             <div class="block" id="1" data-cell></div>
             <div class="block" id="2" data-cell></div>
@@ -50,6 +63,13 @@
         <h1 style="text-align: center; color: chartreuse;">Winner</h1>
         <div class="winner"></div>
         <button id="restartBtn" class="primary-btn">Restart</button>
+    </div>
+    <!-- loser page -->
+    <div class="lose-msg hide">
+        <div class="lose">
+            <h1 style="text-align: center; color: chartreuse;">You Lose</h1>
+        </div>
+        <button id="retryBtn" class="primary-btn">Play Again</button>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script type="module" src="index.js"></script>

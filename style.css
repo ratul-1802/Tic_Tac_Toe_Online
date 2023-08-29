@@ -10,6 +10,72 @@ body{
     background-color: rgba(49, 49, 49, 0.938);
 }
 
+.room-container{
+    background-color: rgba(49, 49, 49, 0.938);
+    border-radius: 10px;
+    /* box-shadow: 0px 0px 20px 20px #38dacc; */
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.joining-details{
+    width: 20vw;
+    height: 30vh;
+    min-height: 300px;
+    min-width: 250px;
+    margin: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background:  #2ad1a7;
+    /* background-color: rgb(27, 170, 189); */
+     border-radius: 10px;
+    box-shadow: 8px 10px 10px 10px #38dacc;
+}
+.joining-details div{
+    margin: 6px;
+    padding: 4px;
+    height: 20%;
+    width: 70%;
+}
+::placeholder{
+    text-align: center;
+    font-size: 15px;
+}
+.joining-details input{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid #7c7b7b;
+    font-size: 18px;
+    height: 70%;
+    width: 90%;
+    text-align: center;
+    border-radius: 10px;
+}
+/* .joining-details input:focus{
+    border: #101011 solid 1px;
+} */
+.joining-details button{
+    background-color: #3b5258;
+    border-radius: 7px;
+    border: 1px solid #3b5258;
+    color: white;
+    padding: 8px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 3px 2px;
+    cursor: pointer;
+}
+.joining-details button:hover{
+    background-color: rgb(130, 174, 180);
+    border: 1px solid;
+    color: black;
+}
+
 .starting-page,.container{
     height: 100vh;
     display: flex;
@@ -113,7 +179,7 @@ body{
 }
 
 /* draw and winner page */
-.draw-msg, .winner-msg{
+.draw-msg, .winner-msg, .lose-msg{
     position: fixed;
     top: 0;
     left: 0;
@@ -161,11 +227,11 @@ button:hover{
     display: flex;
     width: 200px;
     height: 80px;
-    background: rgb(95, 94, 94);
-    color: yellowgreen;
+    background: rgb(71, 131, 241);
+    color: aliceblue;
     font-size: larger;
     margin: 25px;
     justify-content: center;
     align-items: center;
-    border-radius: 60%;
+    border-radius: 70%;
 }

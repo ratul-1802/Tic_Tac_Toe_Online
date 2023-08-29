@@ -41,42 +41,74 @@ io.on('connection', (socket) => {
     //     players.set(socket.id,null);
     //     console.log(players);
     // }
-    players.forEach((value,key)=>{
-        //const socketList =await io.fetchSockets();
-        //console.log(socketList.includes(key));
-        //console.log(socketList);
-        let currentSocket=io.sockets.sockets.get(key);
-        //console.log(key);
-        if (currentSocket===undefined || !currentSocket.connected) { 
-            players.delete(key);
+    // players.forEach((value,key)=>{
+    //     //const socketList =await io.fetchSockets();
+    //     //console.log(socketList.includes(key));
+    //     //console.log(socketList);
+    //     let currentSocket=io.sockets.sockets.get(key);
+    //     //console.log(key);
+    //     if (currentSocket===undefined || !currentSocket.connected) { 
+    //         players.delete(key);
             
-        }
-        //console.log(players);
-    })
-    //console.log(players);   
-    socket.on('markCell', (cellDetails) => {
-        //console.log(cellDetails);
-        socket.broadcast.emit('markCell',cellDetails)
-    })
-    socket.on('profileSelection', (indicator,X_CLASS,Y_CLASS) => {
-        socket.broadcast.emit('profileSelection',indicator,X_CLASS,Y_CLASS);
-        //console.log(socket.id);
-        if(io.engine.clientsCount<=2){
-            if(indicator===1){
-                let obj={
-                    class:X_CLASS,
-                    turn:false
-                };
-                players.set(socket.id,obj);
-                //socket.emit('waitForOpponent');
+    //     }
+    //     //console.log(players);
+    // })
+    //console.log(players);  
+    socket.on('joinRoom',async (id,name)=>{
+        const sockets = await io.in(id).fetchSockets();
+        if(sockets.length<2){
+            let userInfo={
+                class:undefined,
+                turn:undefined,
+                name:name,
+                roomId:id
+            };
+            players.set(socket.id,userInfo)
+            socket.join(id);
+            console.log(sockets.length);
+            if(sockets.length==0){
+                socket.emit('joinRoom',true,false);
             }
             else{
-                let obj={
-                    class:Y_CLASS,
-                    turn:true
-                };
-                players.set(socket.id,obj);
+                socket.emit('joinRoom',true,true);
+                socket.to(players.get(socket.id).roomId).emit('permissionForSelection');
             }
+        }
+        else{
+            socket.emit('joinRoom',false,false);
+        }
+        // socket.to(id).emit('joined',name);
+        // socket.emit('joined','you');
+    }) 
+    socket.on('markCell', (cellDetails) => {
+        //console.log(cellDetails);
+        //socket.broadcast.emit('markCell',cellDetails);
+        socket.to(players.get(socket.id).roomId).emit('markCell',cellDetails);
+    })
+    socket.on('profileSelection', (indicator,X_CLASS,Y_CLASS) => {
+        //socket.broadcast.emit('profileSelection',indicator,X_CLASS,Y_CLASS);
+        socket.to(players.get(socket.id).roomId).emit('profileSelection',indicator,X_CLASS,Y_CLASS);
+        //socket.to("room1").emit(/* ... */);
+        //console.log(socket.id);
+        //if(io.engine.clientsCount<=2){}
+        if(indicator===1){
+            let userInfo={
+                class:X_CLASS,
+                turn:false,
+                name:players.get(socket.id).name,
+                roomId:players.get(socket.id).roomId
+            };
+            players.set(socket.id,userInfo);
+            //socket.emit('waitForOpponent');
+        }
+        else{
+            let userInfo={
+                class:Y_CLASS,
+                turn:true,
+                name:players.get(socket.id).name,
+                roomId:players.get(socket.id).roomId
+            };
+            players.set(socket.id,userInfo);
         }
         
         //console.log(players);
@@ -86,27 +118,30 @@ io.on('connection', (socket) => {
         let cls=players.get(socket.id).class;
         let trn=players.get(socket.id).turn;
         //console.log(typeof(cls));
-        io.sockets.emit('gameJoined',playerJoinCount,cls,trn);
+        //io.sockets.emit('gameJoined',playerJoinCount,cls,trn);
+        io.in(players.get(socket.id).roomId).emit('gameJoined',playerJoinCount,cls,trn);
         //console.log('working');
     })
 
     socket.on('whoseTurn',()=>{
         //console.log(players);
         players.forEach((value,key)=>{
-            if(socket.id!=key){
-                if(value.turn==false){
-                    io.to(key).emit('actionOn2ndJoining','It is your turn',false);
+            if(players.get(socket.id).roomId==value.roomId){
+                if(socket.id!=key){
+                    if(value.turn==false){
+                        io.to(key).emit('actionOn2ndJoining','It is your turn',false,true);
+                    }
+                    else{
+                        io.to(key).emit('actionOn2ndJoining','Wait for your turn',false,false);
+                    }
                 }
                 else{
-                    io.to(key).emit('actionOn2ndJoining','Wait for your turn',false);
-                }
-            }
-            else{
-                if(value.turn==false){
-                    io.to(key).emit('actionOn2ndJoining','It is your turn',true);
-                }
-                else{
-                    io.to(key).emit('actionOn2ndJoining','Wait for your turn',true);
+                    if(value.turn==false){
+                        io.to(key).emit('actionOn2ndJoining','It is your turn',true,false);
+                    }
+                    else{
+                        io.to(key).emit('actionOn2ndJoining','Wait for your turn',true,true);
+                    }
                 }
             }
             
@@ -117,23 +152,41 @@ io.on('connection', (socket) => {
         //console.log(players);
         turn=!turn;
         players.forEach((value,key)=>{
-            //console.log(value,key);
-            if(value.turn!==turn){
-                io.to(key).emit('actionOnTurnChange','Wait for your turn',turn,cls,true);
+            if(players.get(socket.id).roomId==value.roomId){
+                //console.log(value,key);
+                if(value.turn!==turn){
+                    io.to(key).emit('actionOnTurnChange','Wait for your turn',turn,cls,true);
+                }
+                else{
+                    io.to(key).emit('actionOnTurnChange','It is your turn',turn,cls,false);
+                }
             }
-            else{
-                io.to(key).emit('actionOnTurnChange','It is your turn',turn,cls,false);
-            }
-
         })
     })
     socket.on('outcome',(result)=>{
         if(result){
-            socket.broadcast.emit('outcome','Draw');
+            //socket.broadcast.emit('outcome','Draw');
+            socket.to(players.get(socket.id).roomId).emit('outcome',result);
         }
         else{
-            socket.broadcast.emit('outcome','You lose');
+            //socket.broadcast.emit('outcome','You lose');
+            socket.to(players.get(socket.id).roomId).emit('outcome',result);
         }
     });
+
+    socket.on('disconnect',()=>{
+        console.log(`user ${socket.id} disconnected`);
+        try {
+            if(players.get(socket.id)){
+                socket.to(players.get(socket.id).roomId).emit('left',players.get(socket.id).name);
+                players.delete(socket.id);
+                console.log(players);
+            }
+            
+        } catch (error) {
+            console.log(error);
+        }
+        
+    })
 
 })

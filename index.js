@@ -7,18 +7,30 @@ import { checkWin,WINNING_COMBINATIONS } from "./module/win.js";
 //game button
 GAME.startBtn.addEventListener('click', startGameTrigger);
 GAME.restartBtn.addEventListener("click", startGame);
+GAME.retryBtn.addEventListener("click", startGame);
 GAME.drawBtn.addEventListener("click", startGame);
+
+let name,id;
+
+GAME.roomJoinBtn.addEventListener('click',(e)=>{
+    name=GAME.userName.value;
+    id=GAME.roomId.value;
+    if(name!=='' && id!==''){
+        socket.emit('joinRoom',id,name);
+    }
+})
 
 profile(socket);
 //console.log(players);
 //start the game
 function startGameTrigger(){
-    if(GAME.indicator>1){
+    if(GAME.indicator>0){
         startGame();
     }
 }
 
 function startGame(){
+    //console.log('restart clicked');
     GAME.turn=false;
     //setHoverEffect();
     GAME.playerJoinCount++; // count of players having started the game
@@ -28,6 +40,11 @@ function startGame(){
         div.classList.add('message');
         div.innerHTML = 'Wait for your opponent';
         GAME.boardContainer.prepend(div);
+
+        GAME.boardElement.classList.add('cursor-not-allowed');//disable cursor until opponent joins
+        GAME.blockElements.forEach((element)=>{
+            element.classList.add('disable-cursor');
+        });
         //socket.emit('whoseTurn',GAME.turn);
     }
     if(GAME.playerJoinCount==2){
@@ -51,6 +68,10 @@ function startGame(){
     GAME.startingPage.classList.add('hide');
     GAME.winElement.classList.remove("show");
     GAME.drawElement.classList.remove("show");
+    //console.log(GAME.loseElement);
+    GAME.loseElement.classList.remove("show");
+    //console.log(GAME.loseElement);
+    //console.log(GAME.loseElement.classList.remove("show"));
     GAME.winnerImg.children.length ? GAME.winnerImg.removeChild(GAME.winner) : null; 
 }
 
@@ -89,7 +110,7 @@ function clickHandler(e){
 
          // set the winner
         GAME.winner = GAME.blockElements[WINNING_COMBINATIONS[index][0]].cloneNode(true);
-        console.log(GAME.winner);
+        //console.log(GAME.winner);
         return win !== false;
 
         }
@@ -114,6 +135,42 @@ function clickHandler(e){
 
 //broadcast operations
 
+socket.on('joinRoom',(allowJoin,allowSelection)=>{
+    if(allowJoin){
+        GAME.joiningDetails.classList.toggle('hide');
+        GAME.startingPage.classList.toggle('hide');
+        if(!allowSelection){
+            const div = document.createElement("div");
+            div.classList.add('message');
+            div.innerHTML = 'Wait for your opponent';
+            GAME.startingPage.prepend(div);
+            GAME.imageSection.forEach((element)=>{
+                element.classList.add('cursor-not-allowed');
+            })
+            // console.log(GAME.imageSection);
+            // console.log(GAME.selectedAvatar);
+            GAME.selectedAvatar.forEach((element)=>{
+                element.classList.add('disable-cursor');
+            });
+        }
+    }
+    else{
+        //room is full logic
+    }
+})
+
+socket.on('permissionForSelection',()=>{
+    GAME.startingPage.removeChild(GAME.startingPage.firstElementChild);
+    GAME.imageSection.forEach((element)=>{
+        element.classList.remove('cursor-not-allowed');
+    })
+    // console.log(GAME.imageSection);
+    // console.log(GAME.selectedAvatar);
+    GAME.selectedAvatar.forEach((element)=>{
+        element.classList.remove('disable-cursor');
+    });
+});
+
 socket.on('markCell', (cellDetails) => {
     //console.log(cellDetails);
     // console.log(GAME.turn);
@@ -126,6 +183,9 @@ socket.on('markCell', (cellDetails) => {
 })
 
 socket.on('profileSelection',(indicator,X_CLASS,Y_CLASS)=>{
+    if(indicator==1){
+        document.querySelector(`[data-id='${X_CLASS}']`).classList.add('disable-cursor');
+    }
     GAME.indicator=indicator;
     GAME.X_CLASS=X_CLASS;
     GAME.Y_CLASS=Y_CLASS;
@@ -146,16 +206,28 @@ socket.on('gameJoined',(playerJoinCount,cls,trn)=>{
 //     GAME.boardContainer.prepend(div);
 // });
 
-socket.on('actionOn2ndJoining',(msg,flag)=>{
-    if(flag){
+socket.on('actionOn2ndJoining',(msg,flag1,flag2)=>{
+    if(flag1){
         const div = document.createElement("div");
         div.classList.add('message');
         div.innerHTML = msg;
         GAME.boardContainer.prepend(div);
+        if(flag2){
+            GAME.boardElement.classList.add('cursor-not-allowed');
+            GAME.blockElements.forEach((element)=>{
+                element.classList.add('disable-cursor');
+            });
+        }
     }
     else{
         document.querySelector('.message').innerHTML = msg;
         //console.log(msg);
+        if(flag2){
+            GAME.boardElement.classList.remove('cursor-not-allowed');
+            GAME.blockElements.forEach((element)=>{
+                element.classList.remove('disable-cursor');
+            });
+        }
     }
     
     //GAME.boardContainer.removeChild(GAME.boardContainer.firstElementChild);
@@ -180,11 +252,18 @@ socket.on('actionOnTurnChange',(msg,turn,cls,flag)=>{
     else{
         GAME.boardElement.classList.remove('cursor-not-allowed');
         GAME.blockElements.forEach((element)=>{
-            element.classList.remove('disable-cursor');
+            if(!(element.classList.contains('b1') || element.classList.contains('g2') || element.classList.contains('g1') || element.classList.contains('b2')))
+                element.classList.remove('disable-cursor');
         });
     }
 });
 
-socket.on('outcome',(msg)=>{
-    console.log(msg);
+socket.on('outcome',(result)=>{
+    if(result){
+        endGame(result, GAME.winElement, GAME.drawElement);
+    }
+    else{
+        endGame(result, GAME.loseElement, GAME.drawElement);
+    }
+    //console.log(result);
 });
