@@ -6,9 +6,9 @@ import { checkWin,WINNING_COMBINATIONS } from "./module/win.js";
 
 //game button
 GAME.startBtn.addEventListener('click', startGameTrigger);
-GAME.restartBtn.addEventListener("click", startGame);
-GAME.retryBtn.addEventListener("click", startGame);
-GAME.drawBtn.addEventListener("click", startGame);
+GAME.restartBtn.addEventListener("click", restartGameTrigger);
+GAME.retryBtn.addEventListener("click", restartGameTrigger);
+GAME.drawBtn.addEventListener("click", restartGameTrigger);
 
 let name,id;
 
@@ -29,11 +29,29 @@ function startGameTrigger(){
     }
 }
 
+function restartGameTrigger(){
+    GAME.blockElements.forEach((cell)=>{
+        //deleting previous records before restarting the game
+            cell.classList.remove(GAME.X_CLASS);
+            cell.classList.remove(GAME.Y_CLASS);
+            cell.classList.remove("green");
+            cell.classList.remove("blue");
+            cell.classList.remove("win");
+            cell.classList.remove("win");
+            cell.classList.remove('disable-cursor');
+    })
+    const div=document.getElementsByClassName('message');
+    //console.log(div);
+    div[0].remove();
+    startGame();
+}
+
 function startGame(){
     //console.log('restart clicked');
     GAME.turn=false;
     //setHoverEffect();
-    GAME.playerJoinCount++; // count of players having started the game
+    GAME.playerJoinCount++;
+    GAME.playerJoinCount=(GAME.playerJoinCount==3)?1:GAME.playerJoinCount; // count of players having started the game
     socket.emit('gameJoined',GAME.playerJoinCount);
     if(GAME.playerJoinCount==1){
         const div = document.createElement("div");
@@ -54,13 +72,15 @@ function startGame(){
     //find out click events on each block or cell
     GAME.blockElements.forEach((cell)=>{
         //deleting previous records before restarting the game
-        if(GAME.restart===1){
-            cell.classList.remove(GAME.X_CLASS);
-            cell.classList.remove(GAME.Y_CLASS);
-            cell.classList.remove("green");
-            cell.classList.remove("blue");
-            cell.classList.remove("win");
-        }
+        // if(GAME.restart===1){
+        //     cell.classList.remove(GAME.X_CLASS);
+        //     cell.classList.remove(GAME.Y_CLASS);
+        //     cell.classList.remove("green");
+        //     cell.classList.remove("blue");
+        //     cell.classList.remove("win");
+        //     cell.classList.remove("win");
+        //     cell.classList.remove('disable-cursor');
+        // }
         
         cell.addEventListener('click',clickHandler,{once:true})
     })
@@ -207,6 +227,7 @@ socket.on('gameJoined',(playerJoinCount,cls,trn)=>{
 // });
 
 socket.on('actionOn2ndJoining',(msg,flag1,flag2)=>{
+    //console.log('working');
     if(flag1){
         const div = document.createElement("div");
         div.classList.add('message');
