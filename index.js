@@ -56,7 +56,7 @@ function startGame(){
     if(GAME.playerJoinCount==1){
         const div = document.createElement("div");
         div.classList.add('message');
-        div.innerHTML = 'Wait for your opponent';
+        div.innerHTML = 'Wait for opponent';
         GAME.boardContainer.prepend(div);
 
         GAME.boardElement.classList.add('cursor-not-allowed');//disable cursor until opponent joins
@@ -162,7 +162,7 @@ socket.on('joinRoom',(allowJoin,allowSelection)=>{
         if(!allowSelection){
             const div = document.createElement("div");
             div.classList.add('message');
-            div.innerHTML = 'Wait for your opponent';
+            div.innerHTML = 'Wait for opponent';
             GAME.startingPage.prepend(div);
             GAME.imageSection.forEach((element)=>{
                 element.classList.add('cursor-not-allowed');
